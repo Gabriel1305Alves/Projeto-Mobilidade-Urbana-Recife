@@ -2,21 +2,16 @@
   "name": "embarcai",
   "version": "1.0.0",
   "description": "Embarcaí — alertas colaborativos de ônibus em tempo real, sem baixar app.",
-  "main": "server/index.js",
   "scripts": {
-    "dev": "concurrently -n api,web -c blue,green \"node --watch-path=server server/index.js\" \"vite\"",
-    "build": "vite build",
-    "start": "node server/index.js"
+    "dev": "concurrently -n api,web -c blue,green \"npm run api\" \"vite\"",
+    "api": "JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home mvn -f server/pom.xml spring-boot:run",
+    "build": "vite build"
   },
   "engines": {
     "node": ">=18"
   },
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "pg": "^8.13.1",
-    "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0"

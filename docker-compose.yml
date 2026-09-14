@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: linhaviva-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: linhaviva
+      POSTGRES_PASSWORD: linhaviva
+      POSTGRES_DB: linhaviva
+    ports:
+      - "5432:5432"
+    volumes:
+      - linhaviva_pg:/var/lib/postgresql/data
+
+volumes:
+  linhaviva_pg:

@@ -62,7 +62,7 @@ public class RelatoController {
         if (!StatusLinha.tipoValido(body.tipo())) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Escolhe o que aconteceu na linha.");
         }
-        Linha linha = linhas.findByCodigo(codigo)
+        Linha linha = linhas.findByCodigoIgnoreCase(codigo)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Linha não encontrada."));
         Relato relato = new Relato();
         relato.setLinha(linha);

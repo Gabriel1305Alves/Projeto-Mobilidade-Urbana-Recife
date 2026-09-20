@@ -60,7 +60,7 @@ public class LinhaController {
 
     @GetMapping("/{codigo}")
     public LinhaResposta obter(@PathVariable String codigo) {
-        Linha linha = linhas.findByCodigo(codigo)
+        Linha linha = linhas.findByCodigoIgnoreCase(codigo)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Linha não encontrada."));
         List<Relato> daLinha = relatos.findTop40ByLinhaAndCreatedAtGreaterThanEqualOrderByCreatedAtDesc(
             linha, OffsetDateTime.now().minusHours(2)
@@ -70,7 +70,7 @@ public class LinhaController {
 
     @GetMapping(value = "/{codigo}/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> qrcode(@PathVariable String codigo, HttpServletRequest request) throws Exception {
-        linhas.findByCodigo(codigo)
+        linhas.findByCodigoIgnoreCase(codigo)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Linha não encontrada."));
         return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_PNG)
@@ -78,20 +78,20 @@ public class LinhaController {
     }
 
     @PostMapping
-    public ResponseEntity<Linha> criar(
+    public ResponseEntity<LinhaResposta> criar(
         @RequestBody NovaLinhaRequest body,
         @RequestHeader(value = "x-admin-senha", required = false) String senhaHeader
     ) {
-        String senha = senhaHeader != null ? senhaHeader : body.senha();
-        if (!adminSenha.equals(senha)) {
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "Senha de administração inválida.");
+        String senha = senhaHeader != null ? senhaHeader : (body == null ? null : body.senha());
+        if (senha == null || !adminSenha.equals(senha)) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Senha de administração inválida. Use admin123.");
         }
-        if (body.codigo() == null || body.nome() == null || body.origem() == null || body.destino() == null
+        if (body == null || body.codigo() == null || body.nome() == null || body.origem() == null || body.destino() == null
             || body.codigo().isBlank() || body.nome().isBlank() || body.origem().isBlank() || body.destino().isBlank()) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Preenche código, nome, origem e destino.");
         }
         String codigo = body.codigo().trim().toUpperCase();
-        if (linhas.existsByCodigo(codigo)) {
+        if (linhas.existsByCodigoIgnoreCase(codigo)) {
             throw new ApiException(HttpStatus.CONFLICT, "Já existe uma linha com esse código.");
         }
         Linha linha = new Linha();
@@ -99,7 +99,8 @@ public class LinhaController {
         linha.setNome(body.nome().trim());
         linha.setOrigem(body.origem().trim());
         linha.setDestino(body.destino().trim());
-        return ResponseEntity.status(HttpStatus.CREATED).body(linhas.save(linha));
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(LinhaResposta.resumo(linhas.save(linha), List.of()));
     }
 
     private boolean bateBusca(Linha linha, String q) {

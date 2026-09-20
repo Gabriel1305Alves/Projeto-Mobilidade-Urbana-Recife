@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LinhaRepository extends JpaRepository<Linha, Long> {
     Optional<Linha> findByCodigo(String codigo);
+    Optional<Linha> findByCodigoIgnoreCase(String codigo);
     List<Linha> findAllByOrderByCodigoAsc();
     boolean existsByCodigo(String codigo);
+    boolean existsByCodigoIgnoreCase(String codigo);
 }

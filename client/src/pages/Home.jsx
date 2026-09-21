@@ -50,26 +50,44 @@ export default function Home() {
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
             placeholder="020"
-            inputMode="numeric"
             autoComplete="off"
           />
         </label>
 
-        {sugestao && (
-          <button
-            type="button"
-            className="suggestion"
-            onClick={() => navigate(`/linha/${sugestao.codigo}`)}
-          >
-            <span className="badge-num">{sugestao.codigo}</span>
-            <span>
-              <strong>{sugestao.nome}</strong>
-              <small>Linha urbana · GRANDE RECIFE</small>
-            </span>
-            <span className="chevron">›</span>
-          </button>
-        )}
+        {busca.trim()
+          ? linhas.map((linha) => (
+              <button
+                key={linha.codigo}
+                type="button"
+                className="suggestion"
+                onClick={() => navigate(`/linha/${linha.codigo}`)}
+              >
+                <span className="badge-num">{linha.codigo}</span>
+                <span>
+                  <strong>{linha.nome}</strong>
+                  <small>{linha.origem} → {linha.destino}</small>
+                </span>
+                <span className="chevron">›</span>
+              </button>
+            ))
+          : sugestao && (
+              <button
+                type="button"
+                className="suggestion"
+                onClick={() => navigate(`/linha/${sugestao.codigo}`)}
+              >
+                <span className="badge-num">{sugestao.codigo}</span>
+                <span>
+                  <strong>{sugestao.nome}</strong>
+                  <small>Linha urbana · GRANDE RECIFE</small>
+                </span>
+                <span className="chevron">›</span>
+              </button>
+            )}
 
+        {busca.trim() && !erro && linhas.length === 0 && (
+          <p className="erro">Nenhuma linha cadastrada com esse código.</p>
+        )}
         {erro && <p className="erro">{erro}</p>}
         <button className="btn" type="submit">Consultar</button>
       </form>

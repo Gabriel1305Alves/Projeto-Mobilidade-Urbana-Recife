@@ -134,6 +134,8 @@ p {
   font-weight: 600;
 }
 
+form { display: grid; gap: 10px; }
+
 .btn {
   display: block;
   width: 100%;

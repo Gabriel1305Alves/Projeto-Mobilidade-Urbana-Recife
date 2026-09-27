@@ -1,5 +1,6 @@
 package br.com.embarcai.model;
 
+import br.com.embarcai.negocio.RegrasNegocio;
 import java.text.Normalizer;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -27,9 +28,8 @@ public final class StatusLinha {
     }
 
     public static StatusDto de(List<Relato> relatos) {
-        OffsetDateTime limite = OffsetDateTime.now().minusHours(2);
         List<Relato> recentes = relatos.stream()
-            .filter(r -> !r.getCreatedAt().isBefore(limite))
+            .filter(RegrasNegocio::aindaAtivo)
             .toList();
         if (recentes.isEmpty()) {
             return new StatusDto("ok", rotulo("ok"), null, 0);

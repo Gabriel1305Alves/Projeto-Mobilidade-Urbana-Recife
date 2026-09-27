@@ -7,12 +7,24 @@ export const TIPOS = [
   { id: "acidente", rotulo: "Acidente" },
 ];
 
+function tokenAtual() {
+  try {
+    return JSON.parse(localStorage.getItem("embarcai_sessao"))?.token || "";
+  } catch {
+    return "";
+  }
+}
+
 export async function api(path, options = {}) {
+  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  const token = tokenAtual();
+  if (token) headers.Authorization = `Bearer ${token}`;
+
   let resposta;
   try {
     resposta = await fetch(`${API_URL}${path}`, {
-      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
       ...options,
+      headers,
     });
   } catch {
     throw new Error("A API Java não está no ar. Rode npm run dev e tente de novo.");

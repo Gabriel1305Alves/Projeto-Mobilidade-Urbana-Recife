@@ -7,10 +7,10 @@ import br.com.embarcai.dto.NovaLinhaRequest;
 import br.com.embarcai.model.Linha;
 import br.com.embarcai.model.Relato;
 import br.com.embarcai.model.StatusLinha;
+import br.com.embarcai.negocio.RegrasNegocio;
 import br.com.embarcai.repository.LinhaRepository;
 import br.com.embarcai.repository.RelatoRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,14 +48,30 @@ public class LinhaController {
     }
 
     @GetMapping
-    public List<LinhaResposta> listar(@RequestParam(required = false) String q) {
-        OffsetDateTime limite = OffsetDateTime.now().minusHours(2);
-        Map<Long, List<Relato>> porLinha = relatos.findRecentesComLinha(limite).stream()
+    public List<LinhaResposta> listar(
+        @RequestParam(required = false) String q,
+        @RequestParam(required = false) Double lat,
+        @RequestParam(required = false) Double lng
+    ) {
+        Map<Long, List<Relato>> porLinha = relatos.findRecentesComLinha(RegrasNegocio.inicioJanelaAtiva()).stream()
             .collect(Collectors.groupingBy(r -> r.getLinha().getId()));
-        return linhas.findAllByOrderByCodigoAsc().stream()
+        var stream = linhas.findAllByOrderByCodigoAsc().stream()
             .filter(linha -> bateBusca(linha, q))
-            .map(linha -> LinhaResposta.resumo(linha, porLinha.getOrDefault(linha.getId(), List.of())))
-            .toList();
+            .map(linha -> {
+                Double distancia = (lat == null || lng == null)
+                    ? null
+                    : RegrasNegocio.arredondaKm(RegrasNegocio.distanciaDaLinha(linha, lat, lng));
+                return LinhaResposta.resumo(linha, porLinha.getOrDefault(linha.getId(), List.of()), distancia);
+            });
+        if (lat != null && lng != null) {
+            return stream
+                .sorted((a, b) -> Double.compare(
+                    a.distanciaKm() == null ? Double.MAX_VALUE : a.distanciaKm(),
+                    b.distanciaKm() == null ? Double.MAX_VALUE : b.distanciaKm()
+                ))
+                .toList();
+        }
+        return stream.toList();
     }
 
     @GetMapping("/{codigo}")
@@ -63,7 +79,7 @@ public class LinhaController {
         Linha linha = linhas.findByCodigoIgnoreCase(codigo)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Linha não encontrada."));
         List<Relato> daLinha = relatos.findTop40ByLinhaAndCreatedAtGreaterThanEqualOrderByCreatedAtDesc(
-            linha, OffsetDateTime.now().minusHours(2)
+            linha, RegrasNegocio.inicioJanelaAtiva()
         );
         return LinhaResposta.detalhe(linha, daLinha);
     }

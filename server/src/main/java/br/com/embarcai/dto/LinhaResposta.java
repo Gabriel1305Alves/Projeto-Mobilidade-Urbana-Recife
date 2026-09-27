@@ -14,19 +14,30 @@ public record LinhaResposta(
     String origem,
     String destino,
     StatusLinha.StatusDto status,
-    List<RelatoResposta> relatos
+    List<RelatoResposta> relatos,
+    Double distanciaKm,
+    Double latOrigem,
+    Double lngOrigem,
+    Double latDestino,
+    Double lngDestino
 ) {
     public static LinhaResposta resumo(Linha linha, List<Relato> relatos) {
-        return new LinhaResposta(
-            linha.getId(), linha.getCodigo(), linha.getNome(), linha.getOrigem(), linha.getDestino(),
-            StatusLinha.de(relatos), null
-        );
+        return de(linha, relatos, null, null);
+    }
+
+    public static LinhaResposta resumo(Linha linha, List<Relato> relatos, Double distanciaKm) {
+        return de(linha, relatos, null, distanciaKm);
     }
 
     public static LinhaResposta detalhe(Linha linha, List<Relato> relatos) {
+        return de(linha, relatos, relatos.stream().map(RelatoResposta::de).toList(), null);
+    }
+
+    private static LinhaResposta de(Linha linha, List<Relato> relatos, List<RelatoResposta> lista, Double distanciaKm) {
         return new LinhaResposta(
             linha.getId(), linha.getCodigo(), linha.getNome(), linha.getOrigem(), linha.getDestino(),
-            StatusLinha.de(relatos), relatos.stream().map(RelatoResposta::de).toList()
+            StatusLinha.de(relatos), lista, distanciaKm,
+            linha.getLatOrigem(), linha.getLngOrigem(), linha.getLatDestino(), linha.getLngDestino()
         );
     }
 }

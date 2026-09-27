@@ -17,13 +17,13 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErroResposta> tratarJson(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body(new ErroResposta("Preenche código, nome, origem e destino."));
+        return ResponseEntity.badRequest().body(new ErroResposta("Dados inválidos. Confira o formulário."));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErroResposta> tratarDuplicata(DataIntegrityViolationException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(new ErroResposta("Já existe uma linha com esse código."));
+            .body(new ErroResposta("Este cadastro já existe."));
     }
 
     @ExceptionHandler(Exception.class)

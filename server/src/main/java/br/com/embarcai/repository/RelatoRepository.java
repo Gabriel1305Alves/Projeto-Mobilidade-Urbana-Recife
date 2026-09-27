@@ -27,4 +27,11 @@ public interface RelatoRepository extends JpaRepository<Relato, Long> {
     long contarAutoresDesde(@Param("inicio") OffsetDateTime inicio);
 
     boolean existsByLinhaAndMensagemContainingIgnoreCase(Linha linha, String trecho);
+
+    boolean existsByUsuarioIdAndLinhaAndTipoAndCreatedAtGreaterThanEqual(
+        Long usuarioId,
+        Linha linha,
+        String tipo,
+        OffsetDateTime desde
+    );
 }

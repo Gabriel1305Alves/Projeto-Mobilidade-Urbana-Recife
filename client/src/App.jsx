@@ -7,12 +7,16 @@ import Sucesso from "./pages/Sucesso.jsx";
 import Sobre from "./pages/Sobre.jsx";
 import Admin from "./pages/Admin.jsx";
 import Qr from "./pages/Qr.jsx";
+import Login from "./pages/Login.jsx";
+import Cadastro from "./pages/Cadastro.jsx";
 
 export default function App() {
   return (
     <PhoneShell>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/linha/:codigo" element={<Linha />} />
         <Route path="/linha/:codigo/relatar" element={<Relatar />} />
         <Route path="/linha/:codigo/sucesso" element={<Sucesso />} />

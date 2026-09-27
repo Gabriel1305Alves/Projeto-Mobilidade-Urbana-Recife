@@ -22,6 +22,10 @@ public class Linha {
     private String origem;
     @Column(nullable = false, length = 120)
     private String destino;
+    private Double latOrigem;
+    private Double lngOrigem;
+    private Double latDestino;
+    private Double lngDestino;
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now();
 
@@ -34,4 +38,12 @@ public class Linha {
     public void setOrigem(String origem) { this.origem = origem; }
     public String getDestino() { return destino; }
     public void setDestino(String destino) { this.destino = destino; }
+    public Double getLatOrigem() { return latOrigem; }
+    public void setLatOrigem(Double latOrigem) { this.latOrigem = latOrigem; }
+    public Double getLngOrigem() { return lngOrigem; }
+    public void setLngOrigem(Double lngOrigem) { this.lngOrigem = lngOrigem; }
+    public Double getLatDestino() { return latDestino; }
+    public void setLatDestino(Double latDestino) { this.latDestino = latDestino; }
+    public Double getLngDestino() { return lngDestino; }
+    public void setLngDestino(Double lngDestino) { this.lngDestino = lngDestino; }
 }

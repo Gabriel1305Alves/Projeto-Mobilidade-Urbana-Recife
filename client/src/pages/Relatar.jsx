@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, TIPOS } from "../api.js";
+import { useAuth } from "../AuthContext.jsx";
+import { nomeDoLocal, obterPosicao } from "../geo.js";
 import Logo from "../components/Logo.jsx";
 import TipoIcon from "../components/TipoIcon.jsx";
 import TopBar from "../components/TopBar.jsx";
@@ -8,17 +10,29 @@ import TopBar from "../components/TopBar.jsx";
 export default function Relatar() {
   const { codigo } = useParams();
   const navigate = useNavigate();
+  const { usuario } = useAuth();
   const [linha, setLinha] = useState(null);
   const [tipo, setTipo] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
+  const [gps, setGps] = useState(null);
 
   useEffect(() => {
+    if (!usuario) {
+      navigate(`/login?next=${encodeURIComponent(`/linha/${codigo}/relatar`)}`, { replace: true });
+      return;
+    }
     api(`/api/linhas/${encodeURIComponent(codigo)}`)
       .then(setLinha)
       .catch((err) => setErro(err.message));
-  }, [codigo]);
+    obterPosicao()
+      .then(async (pos) => {
+        const local = await nomeDoLocal(pos.lat, pos.lng);
+        setGps({ ...pos, local });
+      })
+      .catch(() => setGps({ erro: "Não foi possível pegar o GPS. O relato ainda pode ser enviado." }));
+  }, [codigo, usuario, navigate]);
 
   async function enviar(event) {
     event.preventDefault();
@@ -28,7 +42,13 @@ export default function Relatar() {
     try {
       await api(`/api/linhas/${encodeURIComponent(codigo)}/relatos`, {
         method: "POST",
-        body: JSON.stringify({ tipo, mensagem }),
+        body: JSON.stringify({
+          tipo,
+          mensagem,
+          latitude: gps?.lat,
+          longitude: gps?.lng,
+          local: gps?.local,
+        }),
       });
       navigate(`/linha/${codigo}/sucesso`);
     } catch (err) {
@@ -73,6 +93,14 @@ export default function Relatar() {
             onChange={(e) => setMensagem(e.target.value)}
           />
         </label>
+
+        <p className={`geo-status ${gps?.local ? "ok" : ""}`}>
+          {gps?.local
+            ? `📍 ${gps.local}`
+            : gps?.erro
+              ? gps.erro
+              : "Obtendo sua localização…"}
+        </p>
 
         {erro && <p className="erro">{erro}</p>}
         <button className="btn" disabled={!tipo || enviando} type="submit">

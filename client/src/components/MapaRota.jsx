@@ -6,13 +6,19 @@ export default function MapaRota({
   latDestino,
   lngDestino,
 }) {
-  const temMapa = latOrigem != null && lngOrigem != null && latDestino != null && lngDestino != null;
-  const minLat = temMapa ? Math.min(latOrigem, latDestino) - 0.03 : 0;
-  const maxLat = temMapa ? Math.max(latOrigem, latDestino) + 0.03 : 0;
-  const minLng = temMapa ? Math.min(lngOrigem, lngDestino) - 0.03 : 0;
-  const maxLng = temMapa ? Math.max(lngOrigem, lngDestino) + 0.03 : 0;
+  const pontos = [
+    [latOrigem, lngOrigem],
+    [latDestino, lngDestino],
+  ].filter(([lat, lng]) => lat != null && lng != null);
+  const temMapa = pontos.length > 0;
+  const lats = pontos.map(([lat]) => lat);
+  const lngs = pontos.map(([, lng]) => lng);
+  const minLat = Math.min(...lats) - 0.03;
+  const maxLat = Math.max(...lats) + 0.03;
+  const minLng = Math.min(...lngs) - 0.03;
+  const maxLng = Math.max(...lngs) + 0.03;
   const mapaUrl = temMapa
-    ? `https://www.openstreetmap.org/export/embed.html?bbox=${minLng}%2C${minLat}%2C${maxLng}%2C${maxLat}&layer=mapnik&marker=${latOrigem}%2C${lngOrigem}`
+    ? `https://www.openstreetmap.org/export/embed.html?bbox=${minLng}%2C${minLat}%2C${maxLng}%2C${maxLat}&layer=mapnik&marker=${pontos[0][0]}%2C${pontos[0][1]}`
     : "";
 
   return (

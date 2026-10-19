@@ -1,6 +1,7 @@
 package br.com.embarcai.controller;
 
 import br.com.embarcai.config.ApiException;
+import br.com.embarcai.config.CoordenadasLinhas;
 import br.com.embarcai.config.QrCodeGenerator;
 import br.com.embarcai.dto.LinhaResposta;
 import br.com.embarcai.dto.NovaLinhaRequest;
@@ -33,17 +34,20 @@ public class LinhaController {
     private final LinhaRepository linhas;
     private final RelatoRepository relatos;
     private final QrCodeGenerator qrCodes;
+    private final CoordenadasLinhas coordenadas;
     private final String adminSenha;
 
     public LinhaController(
         LinhaRepository linhas,
         RelatoRepository relatos,
         QrCodeGenerator qrCodes,
+        CoordenadasLinhas coordenadas,
         @Value("${app.admin-senha}") String adminSenha
     ) {
         this.linhas = linhas;
         this.relatos = relatos;
         this.qrCodes = qrCodes;
+        this.coordenadas = coordenadas;
         this.adminSenha = adminSenha;
     }
 
@@ -115,6 +119,7 @@ public class LinhaController {
         linha.setNome(body.nome().trim());
         linha.setOrigem(body.origem().trim());
         linha.setDestino(body.destino().trim());
+        coordenadas.preencher(linha);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(LinhaResposta.resumo(linhas.save(linha), List.of()));
     }

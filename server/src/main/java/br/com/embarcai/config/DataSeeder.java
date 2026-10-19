@@ -49,11 +49,12 @@ public class DataSeeder implements ApplicationRunner {
                 nova("201", "Macaxeira / Caxangá", "TI Macaxeira", "Caxangá"),
                 nova("321", "PE-15 / Cais de Santa Rita", "TI PE-15", "Cais de Santa Rita"),
                 nova("411", "CDU / Boa Vista", "TI CDU", "Boa Vista"),
-                nova("513", "PRG / Rio Doce", "TI PRG", "Rio Doce"),
+                nova("513", "TI Rio Doce / TI PE-15", "TI Rio Doce", "TI PE-15"),
                 nova("1900", "Circular Centro", "Rua do Sol", "Avenida Guararapes")
             ).forEach(linhas::save);
         }
 
+        corrigirLinha513();
         posicionarLinhas();
 
         Linha linha020 = linhas.findByCodigo("020").orElseGet(() ->
@@ -140,8 +141,20 @@ public class DataSeeder implements ApplicationRunner {
         posicionar("201", -8.0080, -34.9290, -8.0270, -34.9550);
         posicionar("321", -7.9780, -34.8580, -8.0690, -34.8740);
         posicionar("411", -8.0490, -34.9510, -8.0570, -34.8850);
-        posicionar("513", -8.0890, -34.9390, -7.9667, -34.8392);
+        posicionar("513", -7.9667, -34.8392, -7.9780, -34.8580);
         posicionar("1900", -8.0638, -34.8730, -8.0665, -34.8775);
+    }
+
+    /** Bancos criados antes da troca ainda têm a 513 com a origem antiga "TI PRG". */
+    private void corrigirLinha513() {
+        linhas.findByCodigo("513")
+            .filter(linha -> "TI PRG".equals(linha.getOrigem()))
+            .ifPresent(linha -> {
+                linha.setNome("TI Rio Doce / TI PE-15");
+                linha.setOrigem("TI Rio Doce");
+                linha.setDestino("TI PE-15");
+                linhas.save(linha);
+            });
     }
 
     private void posicionar(String codigo, double latO, double lngO, double latD, double lngD) {

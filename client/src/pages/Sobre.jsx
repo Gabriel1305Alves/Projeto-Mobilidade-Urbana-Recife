@@ -18,8 +18,8 @@ export default function Sobre() {
       </p>
       <ul className="sobre-list">
         <li>
-          <strong>QR Code no abrigo</strong>
-          <span>Cola no poste. Sem baixar aplicativo pesado.</span>
+          <strong>QR Code</strong>
+          <span>Escaneie e veja a linha na hora, sem baixar aplicativo.</span>
         </li>
         <li>
           <strong>Status na hora</strong>

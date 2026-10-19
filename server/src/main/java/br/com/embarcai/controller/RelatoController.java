@@ -5,6 +5,7 @@ import br.com.embarcai.dto.NovoRelatoRequest;
 import br.com.embarcai.dto.RelatoResposta;
 import br.com.embarcai.dto.SaudeResposta;
 import br.com.embarcai.dto.StatsResposta;
+import br.com.embarcai.ia.ClassificadorRelatos;
 import br.com.embarcai.model.Linha;
 import br.com.embarcai.model.Relato;
 import br.com.embarcai.model.RelatoConfirmacao;
@@ -37,17 +38,20 @@ public class RelatoController {
     private final RelatoRepository relatos;
     private final RelatoConfirmacaoRepository confirmacoes;
     private final UsuarioRepository usuarios;
+    private final ClassificadorRelatos classificador;
 
     public RelatoController(
         LinhaRepository linhas,
         RelatoRepository relatos,
         RelatoConfirmacaoRepository confirmacoes,
-        UsuarioRepository usuarios
+        UsuarioRepository usuarios,
+        ClassificadorRelatos classificador
     ) {
         this.linhas = linhas;
         this.relatos = relatos;
         this.confirmacoes = confirmacoes;
         this.usuarios = usuarios;
+        this.classificador = classificador;
     }
 
     @GetMapping("/saude")
@@ -106,6 +110,7 @@ public class RelatoController {
         confirmacao.setRelato(relato);
         confirmacao.setUsuario(usuario);
         confirmacoes.save(confirmacao);
+        classificador.aprender(relato.getTipo(), relato.getMensagem());
         return ResponseEntity.status(HttpStatus.CREATED).body(RelatoResposta.de(relato));
     }
 

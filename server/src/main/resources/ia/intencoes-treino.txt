@@ -1,0 +1,108 @@
+# Corpus de intenções do assistente (intencao|frase).
+saudacao|oi
+saudacao|olá
+saudacao|bom dia
+saudacao|boa tarde
+saudacao|boa noite
+saudacao|e aí, tudo bem?
+saudacao|opa
+saudacao|oi assistente
+saudacao|olá, preciso de ajuda
+saudacao|ei, tudo certo?
+saudacao|oi, tudo bem?
+saudacao|oi oi
+saudacao|oii
+saudacao|oi, bom dia
+saudacao|olá, boa noite
+saudacao|ola tudo bem
+status_linha|como está a linha?
+status_linha|como tá o ônibus?
+status_linha|a linha está atrasada?
+status_linha|tem problema na linha?
+status_linha|qual a situação da linha?
+status_linha|o ônibus está demorando?
+status_linha|tem alguma ocorrência na linha?
+status_linha|como está o trajeto?
+status_linha|status da linha
+status_linha|o busão tá vindo?
+status_linha|tem atraso hoje?
+status_linha|alguma novidade na linha?
+status_linha|está tudo tranquilo no trajeto?
+status_linha|o que está acontecendo com a linha?
+status_linha|me fala da linha
+previsao|vai atrasar mais tarde?
+previsao|qual a previsão para a linha?
+previsao|qual o risco de atraso?
+previsao|como vai estar o trânsito mais tarde?
+previsao|qual a chance de atrasar?
+previsao|previsão das próximas horas
+previsao|como vai estar às 18h?
+previsao|vale a pena sair agora ou depois?
+previsao|qual o melhor horário para pegar o ônibus?
+previsao|vai ter engarrafamento no fim da tarde?
+previsao|risco de problema hoje à noite
+previsao|o que esperar daqui a pouco?
+previsao|previsão do tempo de viagem
+previsao|tendência para a próxima hora
+alagamento|tem alagamento?
+alagamento|onde está alagado?
+alagamento|a rua alagou?
+alagamento|está chovendo muito, alguma rua alagada?
+alagamento|tem ponto de alagamento no trajeto?
+alagamento|a chuva alagou alguma avenida?
+alagamento|tem enchente?
+alagamento|ruas com água acumulada
+alagamento|alagamentos agora
+alagamento|choveu, como estão as ruas?
+alternativa|qual outro ônibus posso pegar?
+alternativa|tem outra linha que faz esse trajeto?
+alternativa|linha alternativa
+alternativa|me recomenda uma linha
+alternativa|me indica outro ônibus
+alternativa|outra opção de ônibus
+alternativa|que outro busão vai pro mesmo lugar?
+alternativa|sugere outra rota
+alternativa|qual a melhor linha para ir agora?
+alternativa|tem alternativa para essa linha?
+alternativa|quero evitar essa linha, qual outra pego?
+alternativa|outro caminho para chegar lá
+alternativa|recomendação de linha
+alternativa|outra linha com menos atraso
+relatar|como informo uma ocorrência?
+relatar|quero avisar um acidente
+relatar|como reportar um problema?
+relatar|quero relatar trânsito
+relatar|como faço para avisar que a rua alagou?
+relatar|como envio um alerta?
+relatar|quero registrar uma ocorrência
+relatar|como contribuo com informação?
+relatar|onde eu aviso um bloqueio?
+relatar|como confirmar um alerta?
+linhas|quais linhas existem?
+linhas|lista de linhas
+linhas|quais linhas estão cadastradas?
+linhas|que ônibus vocês têm?
+linhas|mostrar todas as linhas
+linhas|quais linhas posso consultar?
+linhas|tem quais linhas no sistema?
+linhas|linhas disponíveis
+sobre|o que é o embarcaí?
+sobre|como funciona o aplicativo?
+sobre|quem fez esse projeto?
+sobre|para que serve isso?
+sobre|como funciona o qr code?
+sobre|o que você faz?
+sobre|o que você sabe fazer?
+sobre|como a inteligência artificial funciona aqui?
+sobre|me explica o sistema
+agradecimento|obrigado
+agradecimento|obrigada
+agradecimento|valeu
+agradecimento|brigado
+agradecimento|muito obrigado pela ajuda
+agradecimento|show, valeu
+agradecimento|perfeito, obrigado
+agradecimento|tchau
+agradecimento|obrigado, ajudou muito
+agradecimento|valeu, obrigado
+agradecimento|até mais

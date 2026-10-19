@@ -1,0 +1,82 @@
+# Corpus inicial do classificador de ocorrências (tipo|texto).
+# Os relatos reais com descrição, salvos no banco, são somados a este corpus.
+transito|Trânsito parado na Agamenon Magalhães
+transito|Engarrafamento enorme na Av. Caxangá sentido centro
+transito|Fila de carros na Conde da Boa Vista, ônibus não anda
+transito|Tudo parado na BR-101, muito congestionamento
+transito|Trânsito lento na Avenida Norte
+transito|Ônibus preso no engarrafamento perto do Derby
+transito|Retenção grande na ponte Duarte Coelho
+transito|Horário de pico, trânsito pesado na Recife Olinda
+transito|Congestionado na Mascarenhas de Moraes
+transito|Carro quebrado no meio da pista deixou o trânsito lento
+transito|Muito carro na Domingos Ferreira, anda e para
+transito|O ônibus está há 20 minutos parado no mesmo lugar por causa do trânsito
+transito|Lentidão na Abdias de Carvalho
+transito|Engarrafado desde o terminal, trânsito intenso
+transito|Semáforo quebrado e o cruzamento travou
+transito|Fila dupla atrapalhando, tráfego muito lento
+transito|Trânsito complicado na Via Mangue
+transito|O busão não sai do lugar, tá tudo travado
+transito|Pista congestionada sentido Boa Viagem
+transito|Engarrafamento por causa do jogo na Arena
+alagamento|Rua alagada perto do terminal
+alagamento|Alagamento na Rua da Aurora, água no meio da canela
+alagamento|Choveu forte e a avenida encheu de água
+alagamento|Água subindo na Agamenon, carros não passam
+alagamento|Ponto de ônibus alagado, impossível esperar
+alagamento|A pista está cheia de água por causa da chuva
+alagamento|Canal transbordou e alagou a rua
+alagamento|Chuva forte, a Caxangá está alagada
+alagamento|O ônibus não consegue passar, tá tudo inundado
+alagamento|Inundação na Imbiribeira depois do temporal
+alagamento|Água na altura do joelho na Rua Imperial
+alagamento|Bueiro entupido e a rua virou um rio
+alagamento|Alagou tudo perto do mercado de Casa Amarela
+alagamento|Muita chuva, ruas com poças enormes e água acumulada
+alagamento|Maré alta e chuva, alagamento no centro
+alagamento|Temporal deixou a avenida intransitável por causa da água
+alagamento|Enchente no bairro, ônibus desviando
+alagamento|A chuva não para e a rua está debaixo d'água
+alagamento|Ponto alagado, pessoal esperando na calçada molhada
+alagamento|Alagamento em Afogados, carros ilhados
+bloqueio|Rua bloqueada por obra
+bloqueio|Via interditada pela prefeitura
+bloqueio|Protesto bloqueando a avenida
+bloqueio|Manifestação fechou a pista
+bloqueio|Obra da Compesa interditou a rua, ônibus desviando
+bloqueio|Pista fechada para evento
+bloqueio|Árvore caída bloqueando a passagem
+bloqueio|Interdição na ponte, desvio pela outra rua
+bloqueio|Polícia fechou a rua, ninguém passa
+bloqueio|Rua fechada, o ônibus mudou o itinerário
+bloqueio|Desvio por causa de obra no viaduto
+bloqueio|Barreira de cones fechando duas faixas
+bloqueio|Bloqueio total na avenida por manifestação
+bloqueio|Ato público interditando o cruzamento
+bloqueio|Poste caído fechou a rua
+bloqueio|Rua interditada por queda de muro
+bloqueio|Feira ocupando a rua, ônibus não passa
+bloqueio|Obra no asfalto, via parcialmente fechada
+bloqueio|Pneus queimados bloqueando a pista
+bloqueio|Passagem impedida, desvio obrigatório
+acidente|Acidente entre carro e moto na avenida
+acidente|Batida entre dois carros na pista
+acidente|Colisão envolvendo ônibus perto da parada
+acidente|Moto caiu, motoqueiro ferido no chão
+acidente|Atropelamento perto do ponto, SAMU no local
+acidente|Carro bateu no poste
+acidente|Engavetamento na BR, vários carros batidos
+acidente|Ônibus bateu na traseira de um carro
+acidente|Acidente grave, ambulância e bombeiros
+acidente|Capotamento na pista sentido centro
+acidente|Ciclista atropelado no cruzamento
+acidente|Batida feia, tem gente machucada
+acidente|Colidiram dois ônibus no terminal
+acidente|Caminhão tombou na avenida
+acidente|Acidente com vítima, perícia no local
+acidente|Moto bateu no ônibus
+acidente|Carro capotou depois de bater no canteiro
+acidente|Pedestre atingido por carro
+acidente|Batida leve, mas os carros estão parados esperando a polícia
+acidente|Acidente de trânsito com feridos, SAMU chegando

@@ -2,8 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api, tempoAtras } from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
+import AlternativasIA from "../components/AlternativasIA.jsx";
 import Logo from "../components/Logo.jsx";
 import MapaRota from "../components/MapaRota.jsx";
+import PrevisaoIA from "../components/PrevisaoIA.jsx";
 import TipoIcon from "../components/TipoIcon.jsx";
 import TopBar from "../components/TopBar.jsx";
 
@@ -92,6 +94,9 @@ export default function Linha() {
         lngDestino={linha.lng_destino}
       />
 
+      <PrevisaoIA codigo={linha.codigo} atualizacao={linha.relatos.length} />
+      <AlternativasIA codigo={linha.codigo} atualizacao={linha.relatos.length} />
+
       <div className="ocorrencias-head">
         <h2>Ocorrências ativas</h2>
         <span className="count">{linha.relatos.length}</span>
@@ -123,6 +128,9 @@ export default function Linha() {
       <button className="btn ghost" type="button" onClick={informar}>
         + Informar ocorrência
       </button>
+      <Link className="text-link" to={`/assistente?linha=${encodeURIComponent(linha.codigo)}`}>
+        🤖 Perguntar ao assistente
+      </Link>
       <Link className="text-link" to={`/linha/${linha.codigo}/qr`}>
         QR Code desta linha
       </Link>

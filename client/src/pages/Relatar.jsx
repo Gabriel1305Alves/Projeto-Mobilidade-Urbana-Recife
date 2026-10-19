@@ -17,6 +17,20 @@ export default function Relatar() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
   const [gps, setGps] = useState(null);
+  const [sugestao, setSugestao] = useState(null);
+
+  useEffect(() => {
+    if (mensagem.trim().length < 6) {
+      setSugestao(null);
+      return;
+    }
+    const timer = setTimeout(() => {
+      api("/api/ia/classificar", { method: "POST", body: JSON.stringify({ texto: mensagem }) })
+        .then((resposta) => setSugestao(resposta.confiavel ? resposta : null))
+        .catch(() => setSugestao(null));
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [mensagem]);
 
   useEffect(() => {
     if (!usuario) {
@@ -93,6 +107,19 @@ export default function Relatar() {
             onChange={(e) => setMensagem(e.target.value)}
           />
         </label>
+
+        {sugestao && (
+          <div className={`ia-sugestao ${tipo === sugestao.tipo ? "ok" : ""}`}>
+            <span>
+              🤖 A IA acha que é <strong>{sugestao.rotulo}</strong> ({Math.min(99, Math.round(sugestao.confianca * 100))}%)
+            </span>
+            {tipo !== sugestao.tipo && (
+              <button type="button" onClick={() => setTipo(sugestao.tipo)}>
+                Usar
+              </button>
+            )}
+          </div>
+        )}
 
         <p className={`geo-status ${gps?.local ? "ok" : ""}`}>
           {gps?.local

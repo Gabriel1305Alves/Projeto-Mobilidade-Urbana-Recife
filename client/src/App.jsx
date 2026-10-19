@@ -9,6 +9,7 @@ import Admin from "./pages/Admin.jsx";
 import Qr from "./pages/Qr.jsx";
 import Login from "./pages/Login.jsx";
 import Cadastro from "./pages/Cadastro.jsx";
+import Assistente from "./pages/Assistente.jsx";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/linha/:codigo/qr" element={<Qr />} />
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/assistente" element={<Assistente />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </PhoneShell>

@@ -416,6 +416,174 @@ form { display: grid; gap: 10px; }
   font-weight: 700;
   font-size: 0.9rem;
 }
+.ia-sugestao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.ia-sugestao.ok { background: #dcfce7; color: var(--ok); }
+.ia-sugestao button {
+  border: 0;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.previsao {
+  border-radius: 22px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  background: #dcfce7;
+}
+.previsao.moderado { background: var(--warn-bg); }
+.previsao.alto { background: #fee2e2; }
+.previsao-head { display: grid; gap: 2px; }
+.previsao-head .kicker { margin: 0; }
+.previsao-head strong { display: block; font-size: 1.05rem; margin-top: 4px; }
+.previsao-head small { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
+.previsao-horas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  height: 96px;
+  align-items: end;
+}
+.previsao-hora .previsao-pct { color: var(--ink); }
+.previsao-hora {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}
+.previsao-hora small { font-size: 0.7rem; font-weight: 700; color: var(--muted); }
+.barra { width: 70%; border-radius: 6px 6px 2px 2px; background: var(--ok); }
+.barra.moderado { background: #f59e0b; }
+.barra.alto { background: var(--danger); }
+.previsao-fatores {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78rem;
+  color: var(--ink);
+  display: grid;
+  gap: 2px;
+}
+.previsao-fatores li::before { font-weight: 800; margin-right: 6px; }
+.previsao-fatores li.aumenta::before { content: "▲"; color: var(--danger); }
+.previsao-fatores li.reduz::before { content: "▼"; color: var(--ok); }
+.previsao-base { font-size: 0.7rem; color: var(--muted); }
+
+.alternativas {
+  border-radius: 22px;
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+  background: #e0f2fe;
+}
+.alternativas ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.alternativa {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+}
+.alternativa-head { display: flex; align-items: center; gap: 8px; }
+.alternativa-head span:not(.alternativa-risco) {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.alternativa small { font-size: 0.75rem; color: var(--muted); }
+.alternativa-risco {
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #dcfce7;
+  color: #166534;
+}
+.alternativa-risco.moderado { background: var(--warn-bg); color: #92400e; }
+.alternativa-risco.alto { background: #fee2e2; color: #991b1b; }
+
+.chat-screen { gap: 10px; }
+.chat-screen h1 { font-size: 1.4rem; }
+.chat {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.balao {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+.balao.bot { background: var(--card); color: var(--ink); align-self: flex-start; border-bottom-left-radius: 6px; }
+.balao.eu { background: var(--blue); color: #fff; align-self: flex-end; border-bottom-right-radius: 6px; }
+.balao.digitando { color: var(--muted); font-style: italic; }
+.balao-acao {
+  display: block;
+  margin-top: 8px;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--blue);
+  font-weight: 800;
+  cursor: pointer;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button {
+  border: 1.5px solid #bfdbfe;
+  background: #fff;
+  color: var(--blue);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding-top: 6px;
+}
+.chat-form input {
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 12px 16px;
+  min-width: 0;
+}
+.chat-form .btn { width: auto; padding: 12px 18px; }
+
 .erro { color: var(--danger); font-weight: 700; font-size: 0.9rem; }
 .empty { color: var(--muted); padding: 12px 0; }
 

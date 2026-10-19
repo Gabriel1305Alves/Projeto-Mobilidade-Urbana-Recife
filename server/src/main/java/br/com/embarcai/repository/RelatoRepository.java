@@ -28,6 +28,10 @@ public interface RelatoRepository extends JpaRepository<Relato, Long> {
 
     boolean existsByLinhaAndMensagemContainingIgnoreCase(Linha linha, String trecho);
 
+    List<Relato> findByMensagemIsNotNull();
+
+    List<Relato> findByLinhaAndCreatedAtGreaterThanEqual(Linha linha, OffsetDateTime desde);
+
     boolean existsByUsuarioIdAndLinhaAndTipoAndCreatedAtGreaterThanEqual(
         Long usuarioId,
         Linha linha,

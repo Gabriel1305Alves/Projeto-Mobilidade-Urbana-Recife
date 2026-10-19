@@ -108,6 +108,9 @@ export default function Home() {
         <button className="btn ghost" type="button" onClick={linhasPerto} disabled={localizando}>
           {localizando ? "Localizando…" : perto ? "Atualizar localização" : "Linhas perto de mim"}
         </button>
+        <Link className="text-link" to="/assistente">
+          🤖 Perguntar ao assistente
+        </Link>
       </form>
 
       <nav className="home-links">

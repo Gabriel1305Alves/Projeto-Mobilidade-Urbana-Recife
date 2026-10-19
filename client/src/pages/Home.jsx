@@ -66,7 +66,7 @@ export default function Home() {
       <Logo size="lg" />
       <div className="home-copy">
         <h1>Consulte sua linha</h1>
-        <p>Depois de escanear o QR no abrigo, veja a linha antes do ônibus chegar.</p>
+        <p>Problemas no caminho? Confira os alertas da sua linha e embarca aí.</p>
       </div>
 
       <form onSubmit={consultar}>

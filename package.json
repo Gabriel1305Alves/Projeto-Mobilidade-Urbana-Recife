@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "concurrently -n api,web -c blue,green \"npm run api\" \"vite\"",
     "api": "JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home mvn -f server/pom.xml spring-boot:run",
-    "build": "vite build"
+    "build": "vite build",
+    "test": "vitest run && mvn -f server/pom.xml test",
+    "test:web": "vitest run",
+    "test:api": "mvn -f server/pom.xml test"
   },
   "engines": {
     "node": ">=18"
@@ -19,6 +22,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.0",
-    "vite": "^5.4.11"
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
   }
 }

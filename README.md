@@ -31,3 +31,11 @@ npm run dev
 Abra [http://localhost:5173](http://localhost:5173) e consulte a linha **020**.
 
 A API Java sobe em [http://localhost:8080](http://localhost:8080).
+
+## Testes
+
+```bash
+npm test
+```
+
+O plano, os casos e o resultado da última execução estão em [docs/plano-de-testes.md](docs/plano-de-testes.md).

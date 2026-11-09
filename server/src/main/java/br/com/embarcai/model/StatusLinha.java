@@ -24,7 +24,7 @@ public final class StatusLinha {
     }
 
     public static boolean tipoValido(String tipo) {
-        return TIPOS.contains(tipo);
+        return tipo != null && TIPOS.contains(tipo);
     }
 
     public static StatusDto de(List<Relato> relatos) {

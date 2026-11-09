@@ -19,7 +19,7 @@ export default function Sobre() {
       <ul className="sobre-list">
         <li>
           <strong>QR Code</strong>
-          <span>Escaneie e veja a linha na hora, sem baixar aplicativo.</span>
+          <span>Escaneie e veja a linha na hora, sem precisar baixar aplicativo.</span>
         </li>
         <li>
           <strong>Status na hora</strong>

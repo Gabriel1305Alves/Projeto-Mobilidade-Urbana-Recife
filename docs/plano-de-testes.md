@@ -113,14 +113,3 @@ Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 -- in br.com.embarcai.integrac
 
 A primeira execução do `StatusLinhaTest` encontrou um defeito: tipo de ocorrência nulo estourava `NullPointerException` e a API responderia 500 em vez de recusar o relato. `StatusLinha.tipoValido` passou a tratar nulo como tipo inválido. A suíte foi executada de novo e fechou com 65 testes e 0 falhas.
 
-## 8. Texto para o Google Site
-
-Cole na página do critério "Teste de Software":
-
-> O Embarcaí tem plano de testes, testes unitários e testes de integração automatizados.
->
-> Os testes unitários cobrem a regra das 2 horas, a confirmação de alagamento por 5 pessoas, a distância até a linha, os quatro tipos de ocorrência, o classificador de relatos, a previsão de risco e as funções da interface (tempo do alerta, sessão, QR Code e localização).
->
-> Os testes de integração inicializam a API Spring Boot em conjunto com o banco de dados e os mecanismos de segurança, simulando o funcionamento real do sistema. Eles verificam a disponibilidade da API, a consulta da linha 020, a geração de QR Codes, o cadastro e a autenticação de usuários, o registro de ocorrências com proteção anti-spam de 30 minutos, a confirmação de relatos por outros usuários, o cadastro administrativo de linhas e a classificação de ocorrências de alagamento.
->
-> Execução em 8 de novembro de 2026: 65 testes automatizados, 0 falhas (56 no Java, 9 no front). O plano completo e os relatórios estão no repositório, em `docs/plano-de-testes.md` e `docs/evidencias/`.

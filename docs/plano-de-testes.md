@@ -61,7 +61,7 @@ Ficam de fora desta suíte automatizada: layout das telas, o banco PostgreSQL da
 
 | ID | Caso | Resultado esperado |
 | --- | --- | --- |
-| I01 | `GET /api/saude` | 200 e `ok: true`, depois de consultar a tabela de relatos |
+| I01 | `GET /api/operacao` | 200 e `operando: true`, depois de consultar a tabela de relatos |
 | I02 | `GET /api/linhas?lat=-8.2275&lng=-34.9378` | A 020 vem primeiro, a 0,0 km |
 | I03 | `GET /api/linhas/020` | Status `atencao` e relatos da semente |
 | I04 | `GET /api/linhas/9999` | 404 "Linha não encontrada." |

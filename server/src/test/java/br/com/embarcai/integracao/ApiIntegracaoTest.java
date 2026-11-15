@@ -26,10 +26,10 @@ class ApiIntegracaoTest {
     private MockMvc mvc;
 
     @Test
-    void saudeConsultaOBancoERespondeOk() throws Exception {
-        mvc.perform(get("/api/saude"))
+    void operacaoConsultaOBancoERespondeQueEstaNoAr() throws Exception {
+        mvc.perform(get("/api/operacao"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.ok").value(true));
+            .andExpect(jsonPath("$.operando").value(true));
     }
 
     @Test

@@ -115,13 +115,17 @@ export default function Home() {
 
       <nav className="home-links">
         {usuario ? (
-          <button type="button" className="text-link" onClick={sair}>
-            Sair ({usuario.nome.split(" ")[0]})
-          </button>
+          <>
+            <Link to="/conta">Meus dados</Link>
+            <button type="button" className="text-link" onClick={sair}>
+              Sair ({usuario.nome.split(" ")[0]})
+            </button>
+          </>
         ) : (
           <Link to="/login">Entrar</Link>
         )}
         <Link to="/sobre">Como funciona</Link>
+        <Link to="/privacidade">Privacidade</Link>
         <Link to="/admin">Cadastrar linha</Link>
       </nav>
     </section>

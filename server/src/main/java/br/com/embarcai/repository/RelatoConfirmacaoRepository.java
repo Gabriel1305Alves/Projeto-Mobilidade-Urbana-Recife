@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RelatoConfirmacaoRepository extends JpaRepository<RelatoConfirmacao, Long> {
     boolean existsByRelatoIdAndUsuarioId(Long relatoId, Long usuarioId);
+    void deleteByUsuarioId(Long usuarioId);
     long countByRelatoId(Long relatoId);
 }

@@ -10,6 +10,8 @@ import Qr from "./pages/Qr.jsx";
 import Login from "./pages/Login.jsx";
 import Cadastro from "./pages/Cadastro.jsx";
 import Assistente from "./pages/Assistente.jsx";
+import Privacidade from "./pages/Privacidade.jsx";
+import Conta from "./pages/Conta.jsx";
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/assistente" element={<Assistente />} />
+        <Route path="/privacidade" element={<Privacidade />} />
+        <Route path="/conta" element={<Conta />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </PhoneShell>

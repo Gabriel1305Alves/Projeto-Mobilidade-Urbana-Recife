@@ -10,7 +10,7 @@ export default function Cadastro() {
   const location = useLocation();
   const { entrar } = useAuth();
   const destino = new URLSearchParams(location.search).get("next") || "/";
-  const [form, setForm] = useState({ nome: "", email: "", senha: "" });
+  const [form, setForm] = useState({ nome: "", email: "", senha: "", consentimento: false });
   const [erro, setErro] = useState("");
   const [enviando, setEnviando] = useState(false);
 
@@ -77,8 +77,20 @@ export default function Cadastro() {
             placeholder="Mínimo 6 caracteres"
           />
         </label>
+        <label className="consent">
+          <input
+            type="checkbox"
+            checked={form.consentimento}
+            onChange={(e) => set("consentimento", e.target.checked)}
+            required
+          />
+          <span>
+            Aceito o tratamento do meu nome, e-mail e senha para usar o Embarcaí, como descrito na{" "}
+            <Link to="/privacidade">página de privacidade</Link>.
+          </span>
+        </label>
         {erro && <p className="erro">{erro}</p>}
-        <button className="btn" type="submit" disabled={enviando}>
+        <button className="btn" type="submit" disabled={enviando || !form.consentimento}>
           {enviando ? "Criando…" : "Cadastrar"}
         </button>
       </form>

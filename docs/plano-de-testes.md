@@ -69,7 +69,7 @@ Ficam de fora desta suíte automatizada: layout das telas, o banco PostgreSQL da
 | I06 | Cadastro, `GET /api/me` e senha errada | 201 com token, perfil do e-mail, login inválido 401 |
 | I07 | Relato sem login, depois o mesmo relato duas vezes | 401; o primeiro 201; o segundo 429 |
 | I08 | Autor confirma o próprio alerta; outra pessoa confirma | 409; depois `confirmacoes: 2` |
-| I09 | Criar linha com senha errada e com `admin123` | 401; depois 201 com código `777` |
+| I09 | Passageiro ou anônimo tenta criar linha; admin autenticado cria | 401; 403; depois 201 com código `777` |
 | I10 | `POST /api/ia/classificar` com texto de alagamento | `tipo: alagamento` e `confiavel: true` |
 
 ## 6. Como executar
@@ -112,4 +112,3 @@ Tests run: 10, Failures: 0, Errors: 0, Skipped: 0 -- in br.com.embarcai.integrac
 ```
 
 A primeira execução do `StatusLinhaTest` encontrou um defeito: tipo de ocorrência nulo estourava `NullPointerException` e a API responderia 500 em vez de recusar o relato. `StatusLinha.tipoValido` passou a tratar nulo como tipo inválido. A suíte foi executada de novo e fechou com 65 testes e 0 falhas.
-

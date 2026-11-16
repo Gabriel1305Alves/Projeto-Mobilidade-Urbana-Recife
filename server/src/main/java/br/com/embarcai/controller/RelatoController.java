@@ -17,6 +17,7 @@ import br.com.embarcai.repository.RelatoConfirmacaoRepository;
 import br.com.embarcai.repository.RelatoRepository;
 import br.com.embarcai.repository.UsuarioRepository;
 import br.com.embarcai.security.UsuarioAutenticado;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -77,7 +78,7 @@ public class RelatoController {
     @PostMapping("/linhas/{codigo}/relatos")
     public ResponseEntity<RelatoResposta> criar(
         @PathVariable String codigo,
-        @RequestBody NovoRelatoRequest body,
+        @Valid @RequestBody NovoRelatoRequest body,
         Authentication authentication
     ) {
         Usuario usuario = usuarioLogado(authentication);
@@ -150,7 +151,7 @@ public class RelatoController {
 
     private String corta(String valor, int max) {
         if (valor == null) return null;
-        String texto = valor.trim();
+        String texto = valor.trim().replace("<", "").replace(">", "");
         if (texto.isEmpty()) return null;
         return texto.length() > max ? texto.substring(0, max) : texto;
     }

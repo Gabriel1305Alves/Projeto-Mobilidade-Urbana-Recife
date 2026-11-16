@@ -101,7 +101,15 @@ export default function Home() {
         ))}
 
         {busca.trim() && !erro && linhas.length === 0 && (
-          <p className="erro">Nenhuma linha cadastrada com esse código.</p>
+          <>
+            <p className="erro">Nenhuma linha cadastrada com esse código.</p>
+            <Link
+              className="btn ghost"
+              to={`/solicitar-linha?codigo=${encodeURIComponent(busca.trim())}`}
+            >
+              Solicitar cadastro desta linha
+            </Link>
+          </>
         )}
         {erro && <p className="erro">{erro}</p>}
         <button className="btn" type="submit">Consultar</button>
@@ -126,7 +134,7 @@ export default function Home() {
         )}
         <Link to="/sobre">Como funciona</Link>
         <Link to="/privacidade">Privacidade</Link>
-        <Link to="/admin">Cadastrar linha</Link>
+        <Link to="/admin">Área da equipe</Link>
       </nav>
     </section>
   );

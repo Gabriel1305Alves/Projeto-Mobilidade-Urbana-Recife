@@ -21,6 +21,9 @@ public final class RegrasNegocio {
     public static final String CONFIRMADO_COMUNIDADE = "confirmado_comunidade";
     public static final String PAPEL_ADMIN = "ADMIN";
     public static final String PAPEL_PASSAGEIRO = "PASSAGEIRO";
+    public static final String SOLICITACAO_PENDENTE = "pendente";
+    public static final String SOLICITACAO_APROVADA = "aprovada";
+    public static final String SOLICITACAO_RECUSADA = "recusada";
 
     private RegrasNegocio() {}
 

@@ -94,6 +94,7 @@ p {
   color: var(--muted);
   line-height: 1.45;
 }
+.muted a { color: var(--blue); font-weight: 700; }
 
 .logo {
   display: inline-flex;
@@ -417,6 +418,85 @@ form { display: grid; gap: 10px; }
   font-weight: 700;
   font-size: 0.9rem;
 }
+.admin-screen { gap: 16px; }
+.admin-head h1 { font-size: 1.9rem; }
+.admin-resumo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+.admin-resumo article {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+}
+.admin-resumo strong { display: block; color: var(--blue); font-size: 1.25rem; }
+.admin-resumo span { font-size: 0.72rem; color: var(--muted); font-weight: 700; }
+.admin-abas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: var(--card);
+  border-radius: 999px;
+  padding: 4px;
+}
+.admin-abas button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 10px 6px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.admin-abas button.on {
+  background: #fff;
+  color: var(--blue-dark);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+.admin-secao { display: grid; gap: 10px; }
+.admin-secao h2 { margin: 0; font-size: 1.05rem; }
+.admin-rodape {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+.admin-rodape button {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+.pedido-linha {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 18px;
+  background: var(--card);
+}
+.pedido-topo {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+}
+.pedido-topo strong, .pedido-topo small { display: block; }
+.pedido-topo strong { margin: 0; color: var(--ink); font-size: 0.95rem; }
+.pedido-topo small {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.pedido-acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.pedido-acoes .btn { padding: 12px; }
 .consent {
   display: flex;
   gap: 10px;

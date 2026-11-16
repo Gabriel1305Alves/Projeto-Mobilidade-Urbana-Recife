@@ -152,6 +152,77 @@ class ApiIntegracaoTest {
     }
 
     @Test
+    void passageiroSolicitaLinhaEAdminAprova() throws Exception {
+        String codigo = "8" + String.valueOf(System.nanoTime()).substring(10, 13);
+        String corpo = """
+            {"codigo":"%s","nome":"Linha pedida","origem":"Casa Amarela","destino":"Boa Vista"}
+            """.formatted(codigo);
+        String tokenPassageiro = tokenDeNovoUsuario();
+
+        mvc.perform(post("/api/solicitacoes-linha")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(corpo))
+            .andExpect(status().isUnauthorized());
+
+        MvcResult criado = mvc.perform(post("/api/solicitacoes-linha")
+                .header("Authorization", "Bearer " + tokenPassageiro)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(corpo))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.codigo").value(codigo))
+            .andExpect(jsonPath("$.status").value("pendente"))
+            .andReturn();
+        Number id = com.jayway.jsonpath.JsonPath.read(criado.getResponse().getContentAsString(), "$.id");
+
+        mvc.perform(post("/api/solicitacoes-linha")
+                .header("Authorization", "Bearer " + tokenPassageiro)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(corpo))
+            .andExpect(status().isTooManyRequests());
+
+        mvc.perform(get("/api/solicitacoes-linha")
+                .header("Authorization", "Bearer " + tokenPassageiro))
+            .andExpect(status().isForbidden());
+
+        mvc.perform(get("/api/solicitacoes-linha")
+                .header("Authorization", "Bearer " + tokenAdmin()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[?(@.codigo == '%s')].status".formatted(codigo)).value(hasItem("pendente")));
+
+        mvc.perform(post("/api/solicitacoes-linha/" + id + "/aprovar")
+                .header("Authorization", "Bearer " + tokenAdmin()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.codigo").value(codigo));
+
+        mvc.perform(get("/api/linhas/" + codigo))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.nome").value("Linha pedida"));
+    }
+
+    @Test
+    void adminRecusaPedidoDeLinha() throws Exception {
+        String codigo = "9" + String.valueOf(System.nanoTime()).substring(10, 13);
+        String corpo = """
+            {"codigo":"%s","nome":"Linha recusada","origem":"Ibura","destino":"Centro"}
+            """.formatted(codigo);
+        MvcResult criado = mvc.perform(post("/api/solicitacoes-linha")
+                .header("Authorization", "Bearer " + tokenDeNovoUsuario())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(corpo))
+            .andExpect(status().isCreated())
+            .andReturn();
+        Number id = com.jayway.jsonpath.JsonPath.read(criado.getResponse().getContentAsString(), "$.id");
+
+        mvc.perform(post("/api/solicitacoes-linha/" + id + "/recusar")
+                .header("Authorization", "Bearer " + tokenAdmin()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("recusada"));
+
+        mvc.perform(get("/api/linhas/" + codigo))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
     void soAdminCadastraLinha() throws Exception {
         String corpo = """
             {"codigo":"777","nome":"Linha de teste","origem":"Derby","destino":"Boa Viagem"}

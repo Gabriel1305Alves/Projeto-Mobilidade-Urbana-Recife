@@ -12,6 +12,7 @@ import Cadastro from "./pages/Cadastro.jsx";
 import Assistente from "./pages/Assistente.jsx";
 import Privacidade from "./pages/Privacidade.jsx";
 import Conta from "./pages/Conta.jsx";
+import SolicitarLinha from "./pages/SolicitarLinha.jsx";
 
 export default function App() {
   return (
@@ -29,7 +30,9 @@ export default function App() {
         <Route path="/assistente" element={<Assistente />} />
         <Route path="/privacidade" element={<Privacidade />} />
         <Route path="/conta" element={<Conta />} />
+        <Route path="/solicitar-linha" element={<SolicitarLinha />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </PhoneShell>
   );

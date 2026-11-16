@@ -50,8 +50,15 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/login", "/api/cadastrar").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/solicitacoes-linha").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/linhas").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/solicitacoes-linha").authenticated()
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "/api/solicitacoes-linha/*/aprovar",
+                    "/api/solicitacoes-linha/*/recusar"
+                ).hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/ia/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/linhas/*/relatos", "/api/relatos/*/confirmar").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/me").authenticated()

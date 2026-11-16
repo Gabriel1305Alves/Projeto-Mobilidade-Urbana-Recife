@@ -21,25 +21,32 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private final Map<String, List<Long>> relatos = new ConcurrentHashMap<>();
     private final Map<String, List<Long>> logins = new ConcurrentHashMap<>();
+    private final Map<String, List<Long>> solicitacoes = new ConcurrentHashMap<>();
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         if (!"POST".equals(request.getMethod())) return true;
         String uri = request.getRequestURI();
-        return !"/api/login".equals(uri) && !uri.matches("/api/linhas/[^/]+/relatos");
+        return !"/api/login".equals(uri)
+            && !"/api/solicitacoes-linha".equals(uri)
+            && !uri.matches("/api/linhas/[^/]+/relatos");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
-        boolean login = "/api/login".equals(request.getRequestURI());
-        Map<String, List<Long>> balde = login ? logins : relatos;
+        String uri = request.getRequestURI();
+        boolean login = "/api/login".equals(uri);
+        boolean pedidoLinha = "/api/solicitacoes-linha".equals(uri);
+        Map<String, List<Long>> balde = login ? logins : (pedidoLinha ? solicitacoes : relatos);
         if (estourou(balde, request.getRemoteAddr())) {
             response.setStatus(429);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(login
                 ? "{\"erro\":\"Muitas tentativas de login. Espera alguns minutos e tenta de novo.\"}"
-                : "{\"erro\":\"Muitos relatos seguidos deste aparelho. Espera alguns minutos e tenta de novo.\"}"
+                : pedidoLinha
+                    ? "{\"erro\":\"Muitos pedidos de linha seguidos. Espera alguns minutos e tenta de novo.\"}"
+                    : "{\"erro\":\"Muitos relatos seguidos deste aparelho. Espera alguns minutos e tenta de novo.\"}"
             );
             return;
         }

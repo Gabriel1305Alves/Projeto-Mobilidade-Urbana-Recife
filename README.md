@@ -42,4 +42,4 @@ O plano, os casos e o resultado da última execução estão em [docs/plano-de-t
 
 ## Segurança e LGPD
 
-O tratamento de dados do passageiro, o consentimento no cadastro e a exclusão da conta estão em [docs/seguranca-e-lgpd.md](docs/seguranca-e-lgpd.md). O checklist e a vulnerabilidade corrigida estão em [docs/checklist-seguranca.md](docs/checklist-seguranca.md). A página pública fica em `/privacidade`.
+O tratamento de dados, o checklist e as vulnerabilidades corrigidas estão em [docs/seguranca-e-lgpd.md](docs/seguranca-e-lgpd.md). A página pública fica em `/privacidade`.

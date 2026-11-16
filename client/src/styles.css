@@ -183,6 +183,7 @@ form { display: grid; gap: 10px; }
 
 .home-links {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 18px;
   font-size: 0.85rem;
@@ -416,6 +417,23 @@ form { display: grid; gap: 10px; }
   font-weight: 700;
   font-size: 0.9rem;
 }
+.consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.consent input {
+  width: auto;
+  margin-top: 3px;
+}
+.consent a { color: var(--blue); }
+.btn.danger { background: #9f1239; }
 .ia-sugestao {
   display: flex;
   align-items: center;

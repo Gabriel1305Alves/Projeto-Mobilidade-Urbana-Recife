@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,20 +33,17 @@ public class LinhaController {
     private final RelatoRepository relatos;
     private final QrCodeGenerator qrCodes;
     private final CoordenadasLinhas coordenadas;
-    private final String adminSenha;
 
     public LinhaController(
         LinhaRepository linhas,
         RelatoRepository relatos,
         QrCodeGenerator qrCodes,
-        CoordenadasLinhas coordenadas,
-        @Value("${app.admin-senha}") String adminSenha
+        CoordenadasLinhas coordenadas
     ) {
         this.linhas = linhas;
         this.relatos = relatos;
         this.qrCodes = qrCodes;
         this.coordenadas = coordenadas;
-        this.adminSenha = adminSenha;
     }
 
     @GetMapping
@@ -98,14 +93,7 @@ public class LinhaController {
     }
 
     @PostMapping
-    public ResponseEntity<LinhaResposta> criar(
-        @RequestBody NovaLinhaRequest body,
-        @RequestHeader(value = "x-admin-senha", required = false) String senhaHeader
-    ) {
-        String senha = senhaHeader != null ? senhaHeader : (body == null ? null : body.senha());
-        if (senha == null || !adminSenha.equals(senha)) {
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "Senha de administração inválida. Use admin123.");
-        }
+    public ResponseEntity<LinhaResposta> criar(@RequestBody NovaLinhaRequest body) {
         if (body == null || body.codigo() == null || body.nome() == null || body.origem() == null || body.destino() == null
             || body.codigo().isBlank() || body.nome().isBlank() || body.origem().isBlank() || body.destino().isBlank()) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Preenche código, nome, origem e destino.");

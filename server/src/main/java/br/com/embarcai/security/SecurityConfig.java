@@ -2,6 +2,7 @@ package br.com.embarcai.security;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,9 +21,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
     private final JwtService jwt;
+    private final String baseUrl;
 
-    public SecurityConfig(JwtService jwt) {
+    public SecurityConfig(JwtService jwt, @Value("${app.base-url:http://localhost:5173}") String baseUrl) {
         this.jwt = jwt;
+        this.baseUrl = baseUrl;
     }
 
     @Bean
@@ -48,9 +51,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/login", "/api/cadastrar").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/linhas").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/linhas").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/ia/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/linhas/*/relatos", "/api/relatos/*/confirmar").authenticated()
-                .anyRequest().permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/me").authenticated()
+                .anyRequest().denyAll()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -59,9 +64,10 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+        String origem = baseUrl == null ? "http://localhost:5173" : baseUrl.replaceAll("/$", "");
+        config.setAllowedOrigins(List.of(origem, "http://localhost:5173", "http://127.0.0.1:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", config);
         return source;

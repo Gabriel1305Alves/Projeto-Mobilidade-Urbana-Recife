@@ -1,7 +1,9 @@
 package br.com.embarcai.integracao;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -71,7 +73,7 @@ class ApiIntegracaoTest {
         MvcResult criado = mvc.perform(post("/api/cadastrar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"nome":"Passageiro Teste","email":"%s","senha":"123456"}
+                    {"nome":"Passageiro Teste","email":"%s","senha":"123456","consentimento":true}
                     """.formatted(email)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.token").isNotEmpty())
@@ -83,6 +85,13 @@ class ApiIntegracaoTest {
         mvc.perform(get("/api/me").header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.email").value(email));
+
+        mvc.perform(post("/api/cadastrar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"nome":"Sem Consentimento","email":"sem-%s","senha":"123456","consentimento":false}
+                    """.formatted(email)))
+            .andExpect(status().isBadRequest());
 
         mvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +118,10 @@ class ApiIntegracaoTest {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.tipo").value("bloqueio"))
             .andExpect(jsonPath("$.confirmacoes").value(1))
-            .andExpect(jsonPath("$.confiabilidade").value("nao_confirmado"));
+            .andExpect(jsonPath("$.confiabilidade").value("nao_confirmado"))
+            .andExpect(jsonPath("$.usuario").doesNotExist())
+            .andExpect(jsonPath("$.senha").doesNotExist())
+            .andExpect(jsonPath("$.email").doesNotExist());
 
         mvc.perform(post("/api/linhas/020/relatos")
                 .header("Authorization", "Bearer " + token)
@@ -140,23 +152,59 @@ class ApiIntegracaoTest {
     }
 
     @Test
-    void adminCadastraLinhaSomenteComASenha() throws Exception {
+    void soAdminCadastraLinha() throws Exception {
+        String corpo = """
+            {"codigo":"777","nome":"Linha de teste","origem":"Derby","destino":"Boa Viagem"}
+            """;
         mvc.perform(post("/api/linhas")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("x-admin-senha", "errada")
-                .content("""
-                    {"codigo":"777","nome":"Teste","origem":"A","destino":"B"}
-                    """))
+                .content(corpo))
             .andExpect(status().isUnauthorized());
 
         mvc.perform(post("/api/linhas")
+                .header("Authorization", "Bearer " + tokenDeNovoUsuario())
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("x-admin-senha", "admin123")
-                .content("""
-                    {"codigo":"777","nome":"Linha de teste","origem":"Derby","destino":"Boa Viagem"}
-                    """))
+                .content(corpo))
+            .andExpect(status().isForbidden());
+
+        mvc.perform(post("/api/linhas")
+                .header("Authorization", "Bearer " + tokenAdmin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(corpo))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.codigo").value("777"));
+    }
+
+    @Test
+    void relatoRecusaDescricaoEnorme() throws Exception {
+        mvc.perform(post("/api/linhas/020/relatos")
+                .header("Authorization", "Bearer " + tokenDeNovoUsuario())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"tipo\":\"bloqueio\",\"mensagem\":\"" + "a".repeat(281) + "\"}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void loginBloqueiaDepoisDeMuitasTentativas() throws Exception {
+        String corpo = "{\"email\":\"maria@embarcai.com\",\"senha\":\"errada\"}";
+        for (int i = 0; i < 8; i++) {
+            mvc.perform(post("/api/login")
+                    .with(req -> {
+                        req.setRemoteAddr("203.0.113.10");
+                        return req;
+                    })
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(corpo))
+                .andExpect(status().isUnauthorized());
+        }
+        mvc.perform(post("/api/login")
+                .with(req -> {
+                    req.setRemoteAddr("203.0.113.10");
+                    return req;
+                })
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(corpo))
+            .andExpect(status().isTooManyRequests());
     }
 
     @Test
@@ -174,10 +222,48 @@ class ApiIntegracaoTest {
         MvcResult criado = mvc.perform(post("/api/cadastrar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"nome":"Usuário Teste","email":"%s","senha":"123456"}
+                    {"nome":"Usuário Teste","email":"%s","senha":"123456","consentimento":true}
                     """.formatted(email)))
             .andExpect(status().isCreated())
             .andReturn();
         return com.jayway.jsonpath.JsonPath.read(criado.getResponse().getContentAsString(), "$.token");
+    }
+
+    private String tokenAdmin() throws Exception {
+        MvcResult login = mvc.perform(post("/api/login")
+                .with(req -> {
+                    req.setRemoteAddr("203.0.113.20");
+                    return req;
+                })
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"admin@embarcai.com\",\"senha\":\"admin123\"}"))
+            .andExpect(status().isOk())
+            .andReturn();
+        return com.jayway.jsonpath.JsonPath.read(login.getResponse().getContentAsString(), "$.token");
+    }
+
+    @Test
+    void exclusaoDaContaTiraOAcessoEMantemOAlertaSemONome() throws Exception {
+        String token = tokenDeNovoUsuario();
+        MvcResult criado = mvc.perform(post("/api/linhas/020/relatos")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"tipo\":\"transito\",\"mensagem\":\"lentidao no corredor\"}"))
+            .andExpect(status().isCreated())
+            .andReturn();
+        Number id = com.jayway.jsonpath.JsonPath.read(criado.getResponse().getContentAsString(), "$.id");
+
+        mvc.perform(delete("/api/me"))
+            .andExpect(status().isUnauthorized());
+
+        mvc.perform(delete("/api/me").header("Authorization", "Bearer " + token))
+            .andExpect(status().isNoContent());
+
+        mvc.perform(get("/api/me").header("Authorization", "Bearer " + token))
+            .andExpect(status().isUnauthorized());
+
+        mvc.perform(get("/api/linhas/020"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.relatos[?(@.id == " + id + ")].autor").value(hasItem("Passageiro")));
     }
 }

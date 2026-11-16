@@ -32,6 +32,8 @@ public interface RelatoRepository extends JpaRepository<Relato, Long> {
 
     List<Relato> findByLinhaAndCreatedAtGreaterThanEqual(Linha linha, OffsetDateTime desde);
 
+    List<Relato> findByUsuarioId(Long usuarioId);
+
     boolean existsByUsuarioIdAndLinhaAndTipoAndCreatedAtGreaterThanEqual(
         Long usuarioId,
         Linha linha,

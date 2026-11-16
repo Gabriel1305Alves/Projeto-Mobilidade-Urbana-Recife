@@ -16,31 +16,44 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class RateLimitFilter extends OncePerRequestFilter {
-    private final Map<String, List<Long>> envios = new ConcurrentHashMap<>();
+    private static final long JANELA_MS = 10 * 60 * 1000;
+    private static final int MAXIMO = 8;
+
+    private final Map<String, List<Long>> relatos = new ConcurrentHashMap<>();
+    private final Map<String, List<Long>> logins = new ConcurrentHashMap<>();
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !(request.getMethod().equals("POST") && request.getRequestURI().matches("/api/linhas/[^/]+/relatos"));
+        if (!"POST".equals(request.getMethod())) return true;
+        String uri = request.getRequestURI();
+        return !"/api/login".equals(uri) && !uri.matches("/api/linhas/[^/]+/relatos");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
-        String ip = request.getRemoteAddr();
-        long agora = Instant.now().toEpochMilli();
-        List<Long> lista = envios.computeIfAbsent(ip, k -> new ArrayList<>());
-        synchronized (lista) {
-            lista.removeIf(t -> agora - t > 10 * 60 * 1000);
-            if (lista.size() >= 8) {
-                response.setStatus(429);
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                response.getWriter().write(
-                    "{\"erro\":\"Muitos relatos seguidos deste aparelho. Espera alguns minutos e tenta de novo.\"}"
-                );
-                return;
-            }
-            lista.add(agora);
+        boolean login = "/api/login".equals(request.getRequestURI());
+        Map<String, List<Long>> balde = login ? logins : relatos;
+        if (estourou(balde, request.getRemoteAddr())) {
+            response.setStatus(429);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.getWriter().write(login
+                ? "{\"erro\":\"Muitas tentativas de login. Espera alguns minutos e tenta de novo.\"}"
+                : "{\"erro\":\"Muitos relatos seguidos deste aparelho. Espera alguns minutos e tenta de novo.\"}"
+            );
+            return;
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean estourou(Map<String, List<Long>> balde, String ip) {
+        long agora = Instant.now().toEpochMilli();
+        List<Long> lista = balde.computeIfAbsent(ip, k -> new ArrayList<>());
+        synchronized (lista) {
+            lista.removeIf(t -> agora - t > JANELA_MS);
+            if (lista.size() >= MAXIMO) return true;
+            lista.add(agora);
+            return false;
+        }
     }
 }

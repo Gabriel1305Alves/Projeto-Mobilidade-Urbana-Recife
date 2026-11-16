@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { useAuth } from "../AuthContext.jsx";
 import TopBar from "../components/TopBar.jsx";
 
 export default function Admin() {
   const navigate = useNavigate();
+  const { usuario } = useAuth();
   const [form, setForm] = useState({
-    senha: "",
     codigo: "",
     nome: "",
     origem: "",
@@ -17,10 +18,11 @@ export default function Admin() {
   const [linhas, setLinhas] = useState([]);
 
   useEffect(() => {
+    if (usuario?.role !== "ADMIN") return;
     api("/api/linhas")
       .then(setLinhas)
       .catch((err) => setErro(err.message));
-  }, []);
+  }, [usuario]);
 
   function set(campo, valor) {
     setForm((atual) => ({ ...atual, [campo]: valor }));
@@ -43,14 +45,24 @@ export default function Admin() {
     }
   }
 
+  if (usuario?.role !== "ADMIN") {
+    return (
+      <section className="screen">
+        <TopBar to="/" />
+        <h1>Cadastrar linha</h1>
+        <p className="muted">Só a conta da equipe cadastra uma linha nova.</p>
+        <Link className="btn" to="/login?next=/admin">Entrar com a conta da equipe</Link>
+      </section>
+    );
+  }
+
   return (
     <section className="screen">
       <TopBar to="/" />
       <h1>Cadastrar linha</h1>
-      <p className="muted">Cada linha nova ganha página e QR Code. Senha da equipe: admin123</p>
+      <p className="muted">Cada linha nova ganha página e QR Code.</p>
       <form onSubmit={enviar}>
         {[
-          ["senha", "Senha de administração", "password"],
           ["codigo", "Código", "text"],
           ["nome", "Nome", "text"],
           ["origem", "Origem", "text"],
@@ -62,7 +74,7 @@ export default function Admin() {
               type={type}
               required
               autoComplete="off"
-              placeholder={campo === "senha" ? "admin123" : campo === "codigo" ? "020" : ""}
+              placeholder={campo === "codigo" ? "020" : ""}
               value={form[campo]}
               onChange={(e) => set(campo, e.target.value)}
             />

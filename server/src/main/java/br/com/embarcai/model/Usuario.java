@@ -24,6 +24,8 @@ public class Usuario {
     private String role;
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now();
+    @Column(name = "consentiu_em")
+    private OffsetDateTime consentiuEm;
 
     public Long getId() { return id; }
     public String getNome() { return nome; }
@@ -34,4 +36,6 @@ public class Usuario {
     public void setSenha(String senha) { this.senha = senha; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    public OffsetDateTime getConsentiuEm() { return consentiuEm; }
+    public void setConsentiuEm(OffsetDateTime consentiuEm) { this.consentiuEm = consentiuEm; }
 }

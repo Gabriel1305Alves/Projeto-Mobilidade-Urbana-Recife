@@ -1,15 +1,13 @@
 # Segurança da informação e LGPD — Embarcaí
 
-Critério: boas práticas de segurança da informação e a Lei Geral de Proteção de Dados aplicadas ao projeto de mobilidade.
-
-O Embarcaí trata dados de quem consulta linha de ônibus e publica alerta no Grande Recife. Este documento descreve quais dados são esses, para que servem e o que o sistema faz com eles.
+O Embarcaí trata dados de quem consulta linha de ônibus e publica alerta no Grande Recife. Este documento registra quais dados são esses, o checklist de segurança aplicado e as falhas que foram corrigidas.
 
 ## 1. Dados pessoais
 
 | Dado | Onde nasce | Para que serve | O que não fazemos |
 | --- | --- | --- | --- |
 | Nome | Cadastro | Assinar o alerta enquanto a conta existe | Não vai para propaganda |
-| E-mail | Cadastro e login | Identificar a conta e impedir cadastro duplicado | Não aparece no alerta público |
+| E-mail | Cadastro e login | Identificar a conta e impedir cadastro duplicado | Não aparece na tela pública da linha |
 | Senha | Cadastro e login | Autenticar o passageiro | Não é gravada em texto puro e não volta na API |
 | Data do consentimento | Aceite no cadastro | Registrar que a conta foi criada com autorização | Não substitui o texto da página de privacidade |
 | Localização | GPS, só se o navegador permitir | Mostrar o ponto do alerta ou as linhas perto | Não é coletada em segundo plano |
@@ -17,18 +15,39 @@ O Embarcaí trata dados de quem consulta linha de ônibus e publica alerta no Gr
 
 A base usada no protótipo é o consentimento do cadastro (art. 7º, I, da LGPD). Sem o aceite, `POST /api/cadastrar` responde 400 e a conta não é criada.
 
-## 2. Práticas aplicadas
+## 2. Vulnerabilidades corrigidas
 
-- Senha com BCrypt antes de ir ao banco. A resposta de cadastro, login e `GET /api/me` não inclui a senha.
-- Relato e confirmação exigem token JWT. Sem login, a API responde 401.
-- O mesmo passageiro não repete o mesmo tipo de alerta na mesma linha por 30 minutos. Há também limite de envios por aparelho.
-- O login aceita no máximo 8 tentativas a cada 10 minutos por endereço. A nona recebe 429. O checklist e a vulnerabilidade corrigida estão em [checklist-seguranca.md](checklist-seguranca.md).
-- A página de administração não mostra a senha da equipe, e a mensagem de erro também não revela qual é a senha.
-- A página `/privacidade` explica o tratamento em linguagem do projeto. O cadastro só segue com a caixa de consentimento marcada.
-- Em `/conta`, o passageiro vê nome, e-mail e papel. `DELETE /api/me` apaga a conta, apaga o vínculo das confirmações e troca o autor dos alertas para "Passageiro". O aviso da linha permanece, porque os outros passageiros ainda precisam dele, mas deixa de identificar a pessoa.
-- A sessão sai do navegador no logout e também depois que a conta é apagada.
+`POST /api/login` aceitava tentativas sem fim. O mesmo endereço agora tenta o login 8 vezes em 10 minutos. A nona recebe 429.
 
-## 3. Como ver no sistema
+`POST /api/linhas` aceitava qualquer pessoa que soubesse a senha compartilhada, sem conferir se era administrador. Agora só entra quem está logado com o papel `ADMIN`. Passageiro recebe 403. Sem login, 401. Não existe rota para apagar o relato de outra pessoa.
+
+O CORS aceitava qualquer site. Agora só aceita o endereço do Embarcaí (`app.base-url`, `http://localhost:5173` e `http://127.0.0.1:5173`).
+
+A descrição do relato acima de 280 caracteres é recusada. Os caracteres `<` e `>` são removidos antes de gravar.
+
+## 3. Checklist
+
+| Controle | Estado |
+| --- | --- |
+| Senha do passageiro gravada com BCrypt, nunca devolvida pela API | Aplicado |
+| Relato e confirmação só com login | Aplicado |
+| O mesmo alerta não se repete na linha por 30 minutos | Aplicado |
+| No máximo 8 relatos em 10 minutos por aparelho | Aplicado |
+| No máximo 8 logins em 10 minutos por endereço | Corrigido |
+| Cadastro de linha só com papel ADMIN | Corrigido |
+| CORS restrito ao endereço do Embarcaí | Corrigido |
+| Descrição do relato limitada a 280 caracteres | Corrigido |
+| A listagem pública não devolve e-mail nem hash da senha | Aplicado |
+| Rota desconhecida da API recusada | Aplicado |
+| Cadastro só com consentimento | Aplicado |
+| Página `/privacidade` descreve os dados e a finalidade | Aplicado |
+| `/conta` mostra os dados e permite apagar a conta | Aplicado |
+| Ao apagar a conta, o alerta fica na linha e o autor vira "Passageiro" | Aplicado |
+| Logout remove a sessão do navegador | Aplicado |
+
+A senha do banco e a chave do JWT podem ser trocadas por `DB_PASSWORD` e `JWT_SECRET`. Sem a variável, o protótipo local usa um valor só de desenvolvimento.
+
+## 4. Como ver no sistema
 
 1. Abra `/privacidade`.
 2. Em `/cadastro`, tente criar a conta sem marcar o aceite. O botão permanece desabilitado. Se a API receber o cadastro sem `"consentimento": true`, responde 400.

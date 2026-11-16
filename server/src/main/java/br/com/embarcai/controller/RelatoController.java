@@ -3,7 +3,7 @@ package br.com.embarcai.controller;
 import br.com.embarcai.config.ApiException;
 import br.com.embarcai.dto.NovoRelatoRequest;
 import br.com.embarcai.dto.RelatoResposta;
-import br.com.embarcai.dto.SaudeResposta;
+import br.com.embarcai.dto.OperacaoResposta;
 import br.com.embarcai.dto.StatsResposta;
 import br.com.embarcai.ia.ClassificadorRelatos;
 import br.com.embarcai.model.Linha;
@@ -54,10 +54,10 @@ public class RelatoController {
         this.classificador = classificador;
     }
 
-    @GetMapping("/saude")
-    public SaudeResposta saude() {
+    @GetMapping("/operacao")
+    public OperacaoResposta operacao() {
         relatos.count();
-        return new SaudeResposta(true);
+        return new OperacaoResposta(true);
     }
 
     @GetMapping("/stats")

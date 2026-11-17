@@ -84,9 +84,15 @@ public class AuthController {
     public AuthResposta login(@RequestBody LoginRequest body) {
         String email = email(body == null ? null : body.email());
         String senha = body == null ? null : body.senha();
-        Usuario usuario = email == null ? null : usuarios.findByEmailIgnoreCase(email).orElse(null);
-        if (usuario == null || senha == null || !encoder.matches(senha, usuario.getSenha())) {
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "E-mail ou senha inválidos.");
+        if (email == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Informa um e-mail válido.");
+        }
+        Usuario usuario = usuarios.findByEmailIgnoreCase(email).orElse(null);
+        if (usuario == null) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "Usuário ainda não está cadastrado.");
+        }
+        if (senha == null || !encoder.matches(senha, usuario.getSenha())) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Senha incorreta.");
         }
         return autenticado(usuario);
     }
